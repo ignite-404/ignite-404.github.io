@@ -82,4 +82,13 @@ const innerHTML = `
   if (app_container && app_container.innerHTML?.trim().length <= 0) {
     app_container.innerHTML = innerHTML;
   }
+
+  const header = document.getElementsByTagName('head')?.item(0);
+  if (header) {
+    const meta = document.createElement('meta');
+    meta.setAttribute('http-equiv', 'Content-Security-Policy');
+    meta.setAttribute('content', 'upgrade-insecure-requests');
+    header.appendChild(meta);
+  }
+
 })();
