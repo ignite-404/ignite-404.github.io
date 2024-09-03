@@ -1,0 +1,105 @@
+﻿body {
+  margin:0px;
+  background-image:none;
+  position:relative;
+  left:0px;
+  width:1590px;
+  margin-left:auto;
+  margin-right:auto;
+  text-align:left;
+}
+.form_sketch {
+  border-color:transparent;
+  background-color:transparent;
+}
+#base {
+  position:absolute;
+  z-index:0;
+}
+#u302_div {
+  border-width:0px;
+  position:absolute;
+  left:0px;
+  top:0px;
+  width:479px;
+  height:119px;
+  background:inherit;
+  background-color:rgba(255, 255, 255, 0);
+  border:none;
+  border-left:0px;
+  border-top:0px;
+  border-right:0px;
+  border-radius:0px;
+  border-bottom-right-radius:0px;
+  border-bottom-left-radius:0px;
+  -moz-box-shadow:none;
+  -webkit-box-shadow:none;
+  box-shadow:none;
+  font-family:'Times New Roman Negreta', 'Times New Roman Normal', 'Times New Roman', sans-serif;
+  font-weight:700;
+  font-style:normal;
+  font-size:60px;
+  color:#333333;
+  text-align:left;
+}
+#u302 {
+  border-width:0px;
+  position:absolute;
+  left:30px;
+  top:100px;
+  width:479px;
+  height:119px;
+  display:flex;
+  font-family:'Times New Roman Negreta', 'Times New Roman Normal', 'Times New Roman', sans-serif;
+  font-weight:700;
+  font-style:normal;
+  font-size:60px;
+  color:#333333;
+  text-align:left;
+}
+#u302 .text {
+  position:absolute;
+  align-self:center;
+  padding:0px 0px 0px 20px;
+  box-sizing:border-box;
+  width:100%;
+}
+#u302_text {
+  border-width:0px;
+  word-wrap:break-word;
+  text-transform:none;
+}
+#u304 {
+  position:fixed;
+  left:0px;
+  top:0px;
+  width:1650px;
+  height:50px;
+}
+#u304_state0 {
+  border-width:0px;
+  position:absolute;
+  left:0px;
+  top:0px;
+  width:1650px;
+  height:50px;
+  -ms-overflow-x:hidden;
+  overflow-x:hidden;
+  -ms-overflow-y:hidden;
+  overflow-y:hidden;
+  background-color:rgba(255, 255, 255, 1);
+  background-image:none;
+  border:none;
+  border-radius:0px;
+  -moz-box-shadow:0px 3px 5px rgba(0, 0, 0, 0.0470588235294118);
+  -webkit-box-shadow:0px 3px 5px rgba(0, 0, 0, 0.0470588235294118);
+  box-shadow:0px 3px 5px rgba(0, 0, 0, 0.0470588235294118);
+}
+#u304_state0_content {
+  border-width:0px;
+  position:absolute;
+  left:0px;
+  top:0px;
+  width:1px;
+  height:1px;
+}
