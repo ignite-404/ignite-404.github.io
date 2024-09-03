@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunk=self.webpackChunk||[]).push([[905],{36396:function(r,n,u){u.r(n);var e=u(85893);n.default=function(){return(0,e.jsx)(e.Fragment,{children:(0,e.jsx)("h1",{children:"user-center-TODO"})})}}}]);

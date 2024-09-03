@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunk=self.webpackChunk||[]).push([[6077],{70632:function(a,u,n){n.r(u),n.d(u,{default:function(){return c}});var t=n.p+"static/cashier.093d1b23.png",s=n(85893),c=function(){return(0,s.jsxs)(s.Fragment,{children:[(0,s.jsx)("h1",{children:"\u6536\u94F6\u53F0-TODO"}),(0,s.jsx)("img",{src:t,alt:""})]})}}}]);

@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunk=self.webpackChunk||[]).push([[2571],{9826:function(e,t,s){s.r(t),s.d(t,{default:function(){return u}});var n=s(85893);function u(){return(0,n.jsx)(n.Fragment,{children:(0,n.jsx)("div",{style:{padding:20},children:(0,n.jsx)("h1",{className:"font-sans",children:"404 NOT FOUND ."})})})}}}]);
