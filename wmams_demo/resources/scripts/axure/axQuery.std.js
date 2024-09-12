@@ -60,13 +60,6 @@ $axure.internal(function($ax) {
     $ax.public.fn.IsConnector = function (type) { return type == $ax.constants.CONNECTOR_TYPE; }
     $ax.public.fn.IsContainer = function (type) { return type== $ax.constants.VECTOR_SHAPE_TYPE || type == $ax.constants.TABLE_TYPE || type == $ax.constants.MENU_OBJECT_TYPE || type == $ax.constants.TREE_NODE_OBJECT_TYPE; }
 
-    var SET_OPACITY_TYES = [
-        $ax.constants.CHECK_BOX_TYPE, $ax.constants.RADIO_BUTTON_TYPE, $ax.constants.TEXT_BOX_TYPE,
-        $ax.constants.TEXT_AREA_TYPE, $ax.constants.LIST_BOX_TYPE, $ax.constants.COMBO_BOX_TYPE, $ax.constants.BUTTON_TYPE,
-        $ax.constants.IMAGE_BOX_TYPE, $ax.constants.IMAGE_MAP_REGION_TYPE, $ax.constants.VECTOR_SHAPE_TYPE
-    ];
-    $ax.public.fn.SupportSetOpacity = function (type) { return $.inArray(type, SET_OPACITY_TYES) !== -1; }
-
     var PLAIN_TEXT_TYPES = [$ax.constants.TEXT_BOX_TYPE, $ax.constants.TEXT_AREA_TYPE, $ax.constants.LIST_BOX_TYPE,
         $ax.constants.COMBO_BOX_TYPE, $ax.constants.CHECK_BOX_TYPE, $ax.constants.RADIO_BUTTON_TYPE, $ax.constants.BUTTON_TYPE];
 
@@ -372,37 +365,26 @@ $axure.internal(function($ax) {
     };
 
     $ax.public.fn.setOpacity = function(opacity, easing, duration) {
-        if(!easing || !duration) {
+        if(!easing || ! duration) {
             easing = 'none';
             duration = 0;
         }
-        function setOpacity(ids) {
-            for(var index = 0; index < ids.length; index++) {
-                var elementId = ids[index];
-                var obj = $obj(elementId);
-                var query = $jobj(elementId);
-                // set opacity of child elements recursively
-                if($ax.public.fn.IsLayer(obj.type)) {
-                    query.attr('layer-opacity', opacity);
-                    setOpacity(obj.objs.flatMap(o => o.scriptIds));
-                    $ax.action.removeAnimationFromQueue(elementId, $ax.action.queueTypes.fade);
-                } else if($ax.public.fn.SupportSetOpacity(obj.type)) {
-                    var onComplete = function() {
-                        $ax.action.fireAnimationFromQueue(elementId, $ax.action.queueTypes.fade);
-                    };
-
-                    if(duration == 0 || easing == 'none') {
-                        query.css('opacity', opacity);
-                        onComplete();
-                    } else query.animate({ opacity: opacity }, { duration: duration, easing: easing, queue: false, complete: onComplete });
-                }
-            }
-        }
 
         var elementIds = this.getElementIds();
-        setOpacity(elementIds);
-    }
 
+        for(var index = 0; index < elementIds.length; index++) {
+            var elementId = elementIds[index];
+            var onComplete = function() {
+                $ax.action.fireAnimationFromQueue(elementId, $ax.action.queueTypes.fade);
+            };
+
+            var query = $jobj(elementId);
+            if(duration == 0 || easing == 'none') {
+                query.css('opacity', opacity);
+                onComplete();
+            } else query.animate({ opacity: opacity }, { duration: duration, easing: easing, queue: false, complete: onComplete });
+        }
+    }
     //move one widget.  I didn't combine moveto and moveby, since this is in .public, and separate them maybe more clear for the user
     var _move = function (elementId, x, y, options, moveTo) {
         if(!options.easing) options.easing = 'none';
@@ -430,36 +412,6 @@ $axure.internal(function($ax) {
                 function () { $ax.dynamicPanelManager.fitParentPanel(elementId); }, true);
         }
     };
-
-    $ax.public.fn.getCursorOffset = function (elementId) {
-        var cursorOffset = { x: 0, y: 0 };
-
-        var element = $ax('#' + elementId);
-        var dynamicPanelParents = element.getParents(true, 'dynamicPanel')[0] || [];
-        // repeater can be only one
-        var repeaterParents = element.getParents(false, 'repeater');
-        var relativeLocationParents = dynamicPanelParents.concat(repeaterParents);
-        var getParentOffset = function (elementId, parentId) {
-            var parentType = $ax.getTypeFromElementId(parentId);
-            if ($ax.public.fn.IsDynamicPanel(parentType)) {
-                return $ax('#' + parentId).offsetLocation();
-            }
-            if ($ax.public.fn.IsRepeater(parentType)) {
-                return $ax.repeater.getRepeaterElementOffset(parentId, elementId);
-            }
-            return { x: 0, y: 0 };
-        };
-        for (var i = 0; i < relativeLocationParents.length; i++) {
-            var parentId = relativeLocationParents[i];
-            if (parentId) {
-                var parentOffset = getParentOffset(elementId, parentId);
-                cursorOffset.x += parentOffset.x;
-                cursorOffset.y += parentOffset.y;
-            }
-        }
-        return cursorOffset;
-    }
-
 
     $ax.public.fn.moveTo = function (x, y, options) {
         var elementIds = this.getElementIds();
@@ -1060,7 +1012,7 @@ $axure.internal(function($ax) {
                 if(input.length) jobj = input;
 
                 //if (OS_MAC && WEBKIT && $ax.public.fn.IsComboBox(widgetType)) jobj.css('color', enabled ? '' : 'grayText');
-                if($ax.public.fn.IsCheckBox(widgetType) || $ax.public.fn.IsRadioButton(widgetType)) return this;
+
                 if(enabled) jobj.prop('disabled', false);
                 else jobj.prop('disabled', true);
             }
@@ -1384,10 +1336,10 @@ $axure.internal(function($ax) {
     };
 
     //relative to the parent
-    $ax.public.fn.offsetBoundingRect = function (ignoreRotation, ignoreOuterShadow) {
+    $ax.public.fn.offsetBoundingRect = function (ignoreRotation) {
         var elementId = this.getElementIds()[0];
         if (!elementId) return undefined;
-
+        
         //element is null if RDO
         //data- values are for layers (legacy compound) 
         var element = document.getElementById(elementId);
@@ -1398,7 +1350,7 @@ $axure.internal(function($ax) {
         var style;
         var movedLoc = $ax.visibility.getMovedLocation(elementId);
         var resizedSize = $ax.visibility.getResizedSize(elementId);
-
+        
         if (movedLoc) {
             position = movedLoc;
         } else if(element && element.getAttribute('data-left')) {
@@ -1413,7 +1365,7 @@ $axure.internal(function($ax) {
 
             var oShadow = style.outerShadow;
 
-            if (oShadow.on && !ignoreOuterShadow) {
+            if (oShadow.on) {
                 if (oShadow.offsetX < 0) {
                     position.left += oShadow.offsetX;
                     position.left -= oShadow.blurRadius;
@@ -1464,7 +1416,7 @@ $axure.internal(function($ax) {
 
             var oShadow = style.outerShadow;
 
-            if (oShadow.on && !ignoreOuterShadow) {
+            if (oShadow.on) {
                 if (oShadow.offsetX < 0) size.width -= oShadow.offsetX;
                 else size.width += oShadow.offsetX;
                 if (oShadow.offsetY < 0) size.height -= oShadow.offsetY;
@@ -1478,7 +1430,7 @@ $axure.internal(function($ax) {
             var jObj = $(element);
             size = { width: jObj.outerWidth(), height: jObj.outerHeight() };
         }
-
+        
         var fixed = _fixedLocation(elementId, size);
         if(fixed.valid) {
             position.left = fixed.left;
@@ -1517,8 +1469,8 @@ $axure.internal(function($ax) {
     };
 
     //relative to the page
-    $ax.public.fn.pageBoundingRect = function (ignoreRotation, scrollableId, ignoreOuterShadow) {
-        var boundingRect = this.offsetBoundingRect(ignoreRotation, ignoreOuterShadow);
+    $ax.public.fn.pageBoundingRect = function (ignoreRotation, scrollableId) {
+        var boundingRect = this.offsetBoundingRect(ignoreRotation);
         if(!boundingRect) return undefined;
 
         if(boundingRect.isFixed) return _populateBoundingRect(boundingRect);
@@ -1592,8 +1544,8 @@ $axure.internal(function($ax) {
         return _populateBoundingRect(boundingRect);
     }
 
-    $ax.public.fn.size = function ({ ignoreRotation = true, ignoreOuterShadow = true } = {}) {
-        var boundingRect = this.offsetBoundingRect(ignoreRotation, ignoreOuterShadow);
+    $ax.public.fn.size = function () {
+        var boundingRect = this.offsetBoundingRect(true);
         return boundingRect ? boundingRect.size : undefined;
 
         //var firstId = this.getElementIds()[0];

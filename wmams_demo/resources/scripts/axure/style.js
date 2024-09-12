@@ -682,23 +682,11 @@
     var _computeFullStyle = $ax.style.computeFullStyle = function(id, state, currentViewId) {
         var obj = $obj(id);
         var overrides = _computeAllOverrides(id, undefined, state, currentViewId);
-
-        // get style for current state
-        var dynamicPanelStyle = _getCurrentPanelDiagramStyle(id);
-
         // todo: account for image box
         var objStyle = obj.style;
         var customStyle = objStyle.baseStyle && $ax.document.stylesheet.stylesById[objStyle.baseStyle];
-        var returnVal = $.extend({}, $ax.document.stylesheet.defaultStyle, customStyle, objStyle, dynamicPanelStyle, overrides);
+        var returnVal = $.extend({}, $ax.document.stylesheet.defaultStyle, customStyle, objStyle, overrides);
         return _removeUnsupportedProperties(returnVal, obj);
-    };
-
-    var _getCurrentPanelDiagramStyle = function (id) {
-        var diagramObj = $ax.visibility.GetCurrentPanelDiagram(id);
-        if (diagramObj) {
-            return diagramObj.style;
-        }
-        return {};
     };
 
     var _removeUnsupportedProperties = function(style, object) {

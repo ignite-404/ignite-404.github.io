@@ -73,17 +73,14 @@
         }
     }
 
-    var _fireAnimationFromQueue = _action.fireAnimationFromQueue = function(id, type) {
-        _removeAnimationFromQueue(id, type);
+    var _fireAnimationFromQueue = _action.fireAnimationFromQueue = function (id, type) {
+        // Remove the function that was just fired
+        if (animationQueue[id] && animationQueue[id][type]) $ax.splice(animationQueue[id][type], 0, 1);
 
         // Fire the next func if there is one
         var func = getAnimation(id, type);
         if(func && !_checkFireActionGroup(id, type, func)) func();
     };
-
-    var _removeAnimationFromQueue = _action.removeAnimationFromQueue = function(id, type) {
-        if(animationQueue[id] && animationQueue[id][type]) $ax.splice(animationQueue[id][type], 0, 1);
-    }
 
     var _checkFireActionGroup = function(id, type, func) {
         var group = actionToActionGroups[id];

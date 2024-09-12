@@ -348,64 +348,6 @@ $axure.internal(function($ax) {
     };
     _repeaterManager.refreshRepeater = _refreshRepeater;
 
-    _getRepeaterElementOffset = _repeaterManager.getRepeaterElementOffset = function (repeaterId, elementId) {
-        var viewId = $ax.adaptive.currentViewId || '';
-        var robj = $ax.getObjectFromScriptId(repeaterId);
-
-        var propMap = robj.repeaterPropMap;
-        var vertical = _getAdaptiveProp(propMap, 'vertical', viewId, repeaterId, robj);
-        var wrap = _getAdaptiveProp(propMap, 'wrap', viewId, repeaterId, robj);
-        var shownCount = propMap.itemIds.length;
-        var primaryCount = wrap == -1 ? shownCount : Math.min(shownCount, wrap);
-        var secondaryCount = wrap == -1 ? 1 : Math.ceil(shownCount / wrap);
-        var widthCount = vertical ? secondaryCount : primaryCount;
-        var heightCount = vertical ? primaryCount : secondaryCount;
-        var repeaterObj = $jobj(repeaterId);
-        var repeaterOffset = { x: $ax.getNumFromPx(repeaterObj.css('left')), y: $ax.getNumFromPx(repeaterObj.css('top')) };
-        var paddingTop = _getAdaptiveProp(propMap, 'paddingTop', viewId, repeaterId, robj);
-        var paddingLeft = _getAdaptiveProp(propMap, 'paddingLeft', viewId, repeaterId, robj);
-        var offset = propMap[_getViewIdFromPageViewId(viewId, repeaterId, robj)];
-        var spacingX = _getAdaptiveProp(propMap, 'horizontalSpacing', viewId, repeaterId, robj);
-        var xOffset = offset.width + spacingX;
-        var spacingY = _getAdaptiveProp(propMap, 'verticalSpacing', viewId, repeaterId, robj);
-        var yOffset = offset.height + spacingY;
-
-        //first symbol after '-'
-        var repeaterNumber = elementId.split('-')[1][0];
-        var elementIndex = 0;
-        while (propMap.itemIds[elementIndex] != repeaterNumber) {
-            elementIndex++;
-        }
-
-        var multiplier = { y: 0, x: 0 };
-        if (vertical) {
-            multiplier.y = elementIndex % heightCount;
-            multiplier.x = Math.floor(elementIndex / heightCount);
-
-        } else {
-            multiplier.y = Math.floor(elementIndex / widthCount);
-            multiplier.x = elementIndex % widthCount;
-        }
-
-        var firstTopLeftOffset = { x: paddingLeft + repeaterOffset.x, y: paddingTop + repeaterOffset.y };
-
-        var fitToContentOffset = { x: 0, y: 0 };
-
-        var elementContainerId = repeaterId + '-' + repeaterNumber;
-        var elementContainerDomElement = document.getElementById(elementContainerId);
-        if (elementContainerDomElement.style.top) {
-            fitToContentOffset.y = paddingTop + multiplier.y * yOffset - $ax.getNumFromPx(elementContainerDomElement.style.top);
-        }
-        if (elementContainerDomElement.style.left) {
-            fitToContentOffset.x = paddingLeft + multiplier.x * xOffset - $ax.getNumFromPx(elementContainerDomElement.style.left);
-        }
-
-        return {
-            y: firstTopLeftOffset.y + multiplier.y * yOffset - fitToContentOffset.y,
-            x: firstTopLeftOffset.x + multiplier.x * xOffset - fitToContentOffset.x,
-        };
-    }
-
     var _getItemQuery = function(repeaterId, preevalMap) {
         var query = $ax(function (diagramObject, elementId) {
             // Also need to check that this in not preeval

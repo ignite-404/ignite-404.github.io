@@ -232,7 +232,7 @@ $axure.internal(function ($ax) {
 
     $axure.getRectAndStyleById = function (id) {
         var axObj = $ax('#' + id);
-        var rect = axObj.pageBoundingRect(null, null, true);
+        var rect = axObj.pageBoundingRect();
         var style = $ax.style.computeFullStyle(id, $ax.style.generateState(id), $ax.adaptive.currentViewId);
         style.text = axObj.text();
         return { 'id': id, 'rect': rect, 'style': style };
