@@ -15145,3 +15145,51 @@
   word-wrap:break-word;
   text-transform:none;
 }
+#u4178_img {
+  border-width:0px;
+  position:absolute;
+  left:0px;
+  top:0px;
+  width:130px;
+  height:40px;
+}
+#u4178 {
+  border-width:0px;
+  position:absolute;
+  left:844px;
+  top:145px;
+  width:130px;
+  height:40px;
+  display:flex;
+  font-family:'TimesNewRomanPS-BoldMT', 'Times New Roman Bold', 'Times New Roman', sans-serif;
+  font-weight:700;
+  font-style:normal;
+  font-size:20px;
+  color:#FFFFFF;
+  line-height:20px;
+}
+#u4178 .text {
+  position:absolute;
+  align-self:center;
+  padding:0px 0px 0px 0px;
+  box-sizing:border-box;
+  width:100%;
+}
+#u4178_img.mouseOver {
+}
+#u4178.mouseOver {
+}
+#u4178_img.mouseDown {
+}
+#u4178.mouseDown {
+}
+#u4178_img.disabled {
+}
+#u4178.disabled {
+  opacity:0.7;
+}
+#u4178_text {
+  border-width:0px;
+  word-wrap:break-word;
+  text-transform:none;
+}
