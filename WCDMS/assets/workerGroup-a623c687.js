@@ -1,0 +1,1 @@
+import{_ as e,o as t,c as r}from"./index-a9e193d8.js";const o={},s={width:"100%",height:"100%",src:"https://ignite-404.github.io/#/wmams/settings/field-worker-group"};function c(i,n){return t(),r("iframe",s)}const a=e(o,[["render",c]]);export{a as default};
