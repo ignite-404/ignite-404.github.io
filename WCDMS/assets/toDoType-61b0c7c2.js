@@ -1,0 +1,1 @@
+import{_ as t,o as e,c as o}from"./index-882ea7f1.js";const s={},c={width:"100%",height:"100%",src:"https://ignite-404.github.io/#/wmams/settings/todo/type"};function n(r,i){return e(),o("iframe",c)}const a=t(s,[["render",n]]);export{a as default};

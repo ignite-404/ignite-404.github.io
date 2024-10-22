@@ -1,1 +1,0 @@
-import{_ as e,o as t,c as s}from"./index-99541687.js";const c={},o={width:"100%",height:"100%",src:"https://ignite-404.github.io/#/wmams/edms"};function r(n,i){return t(),s("iframe",o)}const a=e(c,[["render",r]]);export{a as default};

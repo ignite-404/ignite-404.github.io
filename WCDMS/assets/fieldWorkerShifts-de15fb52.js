@@ -1,0 +1,1 @@
+import{_ as e,o as t,c as s}from"./index-882ea7f1.js";const r={},i={width:"100%",height:"100%",src:"https://ignite-404.github.io/#/wmams/settings/field-worker-shifts"};function o(c,n){return t(),s("iframe",i)}const _=e(r,[["render",o]]);export{_ as default};

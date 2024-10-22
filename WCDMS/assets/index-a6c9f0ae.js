@@ -1,1 +1,0 @@
-import{A as t,d as l,D as s,o as i,c as r,r as d,S as c}from"./index-99541687.js";const p=t(l({name:"LayContainer",__name:"index",props:{fluid:{type:[Boolean,String],default:!1}},setup(e){const a=e,o=s(()=>a.fluid?"layui-fluid":"layui-container");return(n,u)=>(i(),r("div",{class:c(o.value)},[d(n.$slots,"default")],2))}}));export{p as c};
