@@ -1,0 +1,1 @@
+import{_ as t,o as e,c as o}from"./index-237ca1fa.js";const s={},c={width:"100%",height:"100%",src:"https://ignite-404.github.io/#/wmams/settings/todo/district"};function i(r,n){return e(),o("iframe",c)}const a=t(s,[["render",i]]);export{a as default};
