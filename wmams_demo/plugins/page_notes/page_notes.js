@@ -9,7 +9,7 @@
             $axure.player.createPluginHost({
                 id: 'pageNotesHost',
                 context: 'inspect',
-                title: 'Notes',
+                title: 'Documentation',
                 gid: 2,
             });
         }
@@ -29,14 +29,6 @@
             $('#showNotesOption').find('.overflowOptionCheckbox').addClass('selected');
         }
 
-        function escapeXSS(htmlStr) {
-            return htmlStr.replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#39;");
-        }
-
         function populateNotes(pageForNotes) {
             var hasNotes = false;
             if ($axure.document.configuration.showPageNotes) {
@@ -46,7 +38,7 @@
                     //populate the page notes
                     var notes = pageOrMaster.notes;
                     if (notes && !$.isEmptyObject(notes)) {
-                        pageNoteUi += "<div class='notesPageNameHeader'>" + escapeXSS(pageOrMaster.pageName) + "</div>";
+                        pageNoteUi += "<div class='notesPageNameHeader'>" + pageOrMaster.pageName + "</div>";
 
                         var showNames = $axure.document.configuration.showPageNoteNames;
                         for(var noteName in notes) {
@@ -461,7 +453,7 @@
     function generatePageNotes() {
         var pageNotesUi = "<div id='pageNotesHeader'>";
 
-        pageNotesUi += "<div id='pageNotesToolbar' style='height: 10px;'>";
+        pageNotesUi += "<div id='pageNotesToolbar' style='height: 12px;'>";
         pageNotesUi += "</div>";
         pageNotesUi += "</div>";
 
@@ -472,7 +464,7 @@
         pageNotesUi += "<span id='pageNotesContent'></span>";
         pageNotesUi += "</div></div>";
 
-        $('#pageNotesHost').append(pageNotesUi);
+        $('#pageNotesHost').html(pageNotesUi);
 
         if(!$axure.document.configuration.showAnnotations) {
             $('#pageNotesHost .pageNameHeader').css('padding-right', '55px');

@@ -56,7 +56,6 @@ var openPreviousPage = $axure.player.openPreviousPage = function () {
         $('.rightArrow').click(openNextPage);
 
         $('.sitemapPlusMinusLink').click(collapse_click);
-        $('#expandCollapseAll').click(expandCollapseAll_click);
         $('.sitemapPageLink').parent().mousedown(node_click);
 
         $('#interfaceAdaptiveViewsListContainer').hide();
@@ -68,11 +67,11 @@ var openPreviousPage = $axure.player.openPreviousPage = function () {
 
         // bind to the page load
         $axure.page.bind('load.sitemap', function() {
-            currentPageLoc = $axure.page.location.split("?")[0];
+            currentPageLoc = $axure.page.location.split("#")[0];
             var decodedPageLoc = decodeURI(currentPageLoc);
             currentNodeUrl = decodedPageLoc.substr(decodedPageLoc.lastIndexOf('/') ? decodedPageLoc.lastIndexOf('/') + 1 : 0);
             currentPlayerLoc = $(location).attr('href').split("#")[0].split("?")[0];
-            currentPageHashString = '?p=' + currentNodeUrl.substr(0, currentNodeUrl.lastIndexOf('.'));
+            currentPageHashString = '#p=' + currentNodeUrl.substr(0, currentNodeUrl.lastIndexOf('.'));
 
             $axure.player.setVarInCurrentUrlHash(PAGE_ID_NAME, $axure.player.getPageIdByUrl(currentNodeUrl));
             $axure.player.setVarInCurrentUrlHash(PAGE_URL_NAME, currentNodeUrl.substring(0, currentNodeUrl.lastIndexOf('.html')));
@@ -82,23 +81,13 @@ var openPreviousPage = $axure.player.openPreviousPage = function () {
             $currentNode.parent().parent().addClass('sitemapHighlight');
 
             var pageName = $axure.page.pageName;
-            $('.pageNameHeader').text(pageName);
+            $('.pageNameHeader').html(pageName);
 
             if ($currentNode.length > 0 && pageCount > 1) {
                 var currentNode = $currentNode[0];
                 var currentNum = $('.sitemapPageLink').index(currentNode) + 1;
                 $('.pageCountHeader').html('(' + currentNum + ' of ' + pageCount + ')');
             } else $('.pageCountHeader').html('');
-
-            // expand all parent nodes
-            if ($currentNode.length > 0) {
-                var expandableParents = $currentNode.closest('.sitemapNode').parents('.sitemapExpandableNode');
-                if (expandableParents.length > 0) {
-                    expandableParents.each(function () {
-                        expand_click($(this).find('.sitemapPlusMinusLink').first());
-                    });
-                }
-            }
 
             //If highlight var is present and set to 1 or else if
             //sitemap highlight button is selected then highlight interactive elements
@@ -165,26 +154,16 @@ var openPreviousPage = $axure.player.openPreviousPage = function () {
         });
 
         var $vpContainer = $('#interfaceScaleListContainer');
-
-        if ($axure.player.zoomValues) {
-            var zoomValues = '';
-            $.each($axure.player.zoomValues, function(index, value ) {
-                zoomValues += '<div class="vpZoomValue" val='+value+' ><div class="zoomValue"></div>'+value+'%</div>';
-            });
-            $(zoomValues).appendTo('#scaleMenuContainer');
-            $('.vpZoomValue').click(vpZoomValue_click);
-        }
         
         var scaleOptions = '<div class="vpScaleOption" val="0"><div class="scaleRadioButton"><div class="selectedRadioButtonFill"></div></div>Default Scale</div>';
         scaleOptions += '<div class="vpScaleOption" val="1"><div class="scaleRadioButton"><div class="selectedRadioButtonFill"></div></div>Scale to Width</div>';
         scaleOptions += '<div class="vpScaleOption" val="2"><div class="scaleRadioButton"><div class="selectedRadioButtonFill"></div></div>Scale to Fit</div>';
-        scaleOptions += '<div class="vpScaleOption" val="3" hidden><div class="scaleRadioButton"><div class="selectedRadioButtonFill"></div></div>User Scale</div>';
-        $(scaleOptions).appendTo($vpContainer);        
-        $('#scaleMenuContainer').append($vpContainer);
+        $(scaleOptions).appendTo($vpContainer);
+
+        $('#overflowMenuContainer').append('<div id="showHotspotsOption" class="showOption" style="order: 1"><div class="overflowOptionCheckbox"></div>Show Hotspots</div>');
+        $('#overflowMenuContainer').append($vpContainer);
         $vpContainer.show();
 
-        $('#overflowMenuContainer').append('<div id="showHotspotsOption" class="showOption" style="order: 1"><div class="overflowOptionCheckbox"></div>Show Hotspots</div>');        
-        
         $('#showHotspotsOption').click(showHotspots_click);
         $('.vpScaleOption').click(vpScaleOption_click);
         $('.vpScaleOption').mouseup(function (event) {
@@ -299,17 +278,6 @@ var openPreviousPage = $axure.player.openPreviousPage = function () {
         }
     }
 
-    var _collapsedAll = true;
-
-    function setExpandCollapseState(collapsedAll) {
-        if (collapsedAll == _collapsedAll) return;
-        _collapsedAll = collapsedAll;
-        $("#expandCollapseAll").text(_collapsedAll ? "Expand All" : "Collapse All");
-    }
-
-    function expandCollapseAll_click(e) {
-        $(_collapsedAll ? ".sitemapPlus" : ".sitemapMinus").parent().click();
-    }
 
     function collapse_click(event) {
         if($(this).children('.sitemapPlus').length > 0) {
@@ -318,13 +286,11 @@ var openPreviousPage = $axure.player.openPreviousPage = function () {
             $(this)
                 .children('.sitemapMinus').removeClass('sitemapMinus').addClass('sitemapPlus').end()
                 .closest('li').children('ul').hide(SHOW_HIDE_ANIMATION_DURATION);
-            setExpandCollapseState($(".sitemapMinus").length == 0);
         }
         event.stopPropagation();
     }
 
     function expand_click($this) {
-        setExpandCollapseState(false);
         $this
             .children('.sitemapPlus').removeClass('sitemapPlus').addClass('sitemapMinus').end()
             .closest('li').children('ul').show(SHOW_HIDE_ANIMATION_DURATION);
@@ -442,7 +408,7 @@ var openPreviousPage = $axure.player.openPreviousPage = function () {
             $axure.messageCenter.postMessage('setAdaptiveViewForSize', { 'width': $('#mainPanel').width(), 'height': $('#mainPanel').height() });
             $axure.player.deleteVarFromCurrentUrlHash(ADAPTIVE_VIEW_VAR_NAME);
         } else {
-            currentPageLoc = $axure.page.location.split("?")[0];
+            currentPageLoc = $axure.page.location.split("#")[0];
             var decodedPageLoc = decodeURI(currentPageLoc);
             var nodeUrl = decodedPageLoc.substr(decodedPageLoc.lastIndexOf('/')
                 ? decodedPageLoc.lastIndexOf('/') + 1
@@ -481,9 +447,6 @@ var openPreviousPage = $axure.player.openPreviousPage = function () {
     function vpScaleOption_click(event) {
         var scaleCheckDiv = $(this).find('.scaleRadioButton');
         var scaleVal = $(this).attr('val');
-        if (scaleVal == '0') {
-            $axure.player.zoomPage(100);
-        }
         if (scaleCheckDiv.hasClass('selectedRadioButton')) return false;
 
         var $selectedScaleOption = $('.vpScaleOption[val="' + scaleVal + '"], .projectOptionsScaleRow[val="' + scaleVal + '"]');
@@ -500,15 +463,6 @@ var openPreviousPage = $axure.player.openPreviousPage = function () {
         }
 
         $axure.player.refreshViewPort();
-        $axure.player.closePopup();
-    }
-
-    function vpZoomValue_click() {
-        var scaleVal = $(this).attr('val');
-        $axure.player.selectScaleOption(3);
-        $axure.player.zoomPage(scaleVal);
-        
-        $axure.player.closePopup();
     }
 
     function search_input_keyup(event) {
@@ -534,24 +488,19 @@ var openPreviousPage = $axure.player.openPreviousPage = function () {
     function generateSitemap() {
         var treeUl = "<div id='sitemapHeader'' class='sitemapHeader'>";
         treeUl += "<div id='sitemapToolbar' class='sitemapToolbar'>";
-        treeUl += "<div class='toolbarRow'>"
 
-        var sitemapTitle = $axure.player.getProjectName();
-        if (!sitemapTitle) sitemapTitle = "Pages";
-        treeUl += "<div class='pluginNameHeader'>" + sitemapTitle + "</div>";
-
-        //treeUl += '<div id="searchDiv"><span id="searchIcon" class="sitemapToolbarButton"></span><input id="searchBox" type="text"/></div>';
+        treeUl += '<div id="searchDiv"><span id="searchIcon" class="sitemapToolbarButton"></span><input id="searchBox" type="text"/></div>';
         treeUl += "<div class='leftArrow sitemapToolbarButton'></div>";
         treeUl += "<div class='rightArrow sitemapToolbarButton'></div>";
-        treeUl += "</div>";
-        treeUl += "<div class='toolbarRow'>"
-        treeUl += "<div id='searchDiv'><span id='searchIcon' class='sitemapToolbarButton'></span><input id='searchBox' type='text'/></div>";
-        treeUl += "<div id='expandCollapseAll'>Expand All</div>"
-        treeUl += "</div>";
+
         treeUl += "</div>";
         treeUl += "</div>";
 
         ///////////////////
+
+        var sitemapTitle = $axure.player.getProjectName();
+        if (!sitemapTitle) sitemapTitle = "Pages";
+        treeUl += "<div class='sitemapPluginNameHeader pluginNameHeader'>" + sitemapTitle + "</div>";
 
         treeUl += "<div id='sitemapTreeContainer'>";
         treeUl += "<ul class='sitemapTree' style='clear:both;'>";
@@ -576,19 +525,15 @@ var openPreviousPage = $axure.player.openPreviousPage = function () {
     function generateNode(node, level) {
         var hasChildren = (node.children && node.children.length > 0);
         var margin, returnVal;
-        var isFolder = node.type == "Folder";
         if(hasChildren) {
             margin = (9 + level * 17);
-            if (isFolder) {
-                returnVal = "<li class='sitemapNode sitemapExpandableNode'><div class='sitemapHover'><div class='sitemapPageLinkContainer sitemapPlusMinusLink' style='margin-left:" + margin + "px'><span class='sitemapPlus'></span>";
-            } else {
-                returnVal = "<li class='sitemapNode sitemapExpandableNode'><div class='sitemapHover'><div class='sitemapPageLinkContainer' style='margin-left:" + margin + "px'><a class='sitemapPlusMinusLink'><span class='sitemapMinus'></span></a>";
-            }
+            returnVal = "<li class='sitemapNode sitemapExpandableNode'><div><div class='sitemapPageLinkContainer' style='margin-left:" + margin + "px'><a class='sitemapPlusMinusLink'><span class='sitemapMinus'></span></a>";
         } else {
             margin = (19 + level * 17);
-            returnVal = "<li class='sitemapNode sitemapLeafNode'><div class='sitemapHover'><div class='sitemapPageLinkContainer' style='margin-left:" + margin + "px'>";
+            returnVal = "<li class='sitemapNode sitemapLeafNode'><div><div class='sitemapPageLinkContainer' style='margin-left:" + margin + "px'>";
         }
 
+        var isFolder = node.type == "Folder";
         if(!isFolder) {
             returnVal += "<a class='sitemapPageLink' nodeUrl='" + node.url + "'>";
             allNodeUrls.push(node.url);
@@ -604,7 +549,7 @@ var openPreviousPage = $axure.player.openPreviousPage = function () {
         returnVal += "</div></div>";
 
         if(hasChildren) {
-            returnVal += isFolder ? "<ul style='display: none;'>" : "<ul>";
+            returnVal += "<ul>";
             for(var i = 0; i < node.children.length; i++) {
                 var child = node.children[i];
                 returnVal += generateNode(child, level + 1);

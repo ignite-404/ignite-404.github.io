@@ -76,7 +76,7 @@
 .box_1 {
 }
 .heading_1 {
-  font-family:'微软雅黑 Bold', '微软雅黑', '微软雅黑', sans-serif;
+  font-family:'微软雅黑 Bold', '微软雅黑 Regular', '微软雅黑', sans-serif;
   font-weight:700;
   font-style:normal;
   font-size:32px;
@@ -88,7 +88,7 @@
   text-align:left;
 }
 .iconfont {
-  font-family:"iconfont", sans-serif;
+  font-family:'iconfont ', 'iconfont', sans-serif;
   font-weight:400;
   font-style:normal;
   font-size:18px;
@@ -128,7 +128,7 @@
   color:#999999;
 }
 .el-button-primary {
-  font-family:"Arial", sans-serif;
+  font-family:'Arial Normal', 'Arial', sans-serif;
   font-weight:400;
   font-style:normal;
   font-size:14px;
@@ -146,7 +146,7 @@
   text-align:left;
 }
 .el-button-primary-plain {
-  font-family:"Arial", sans-serif;
+  font-family:'Arial Normal', 'Arial', sans-serif;
   font-weight:400;
   font-style:normal;
   font-size:14px;
@@ -161,7 +161,7 @@
 ._图片 {
 }
 .heading_2 {
-  font-family:'微软雅黑 Bold', '微软雅黑', '微软雅黑', sans-serif;
+  font-family:'微软雅黑 Bold', '微软雅黑 Regular', '微软雅黑', sans-serif;
   font-weight:700;
   font-style:normal;
   font-size:24px;
@@ -175,9 +175,6 @@
 .primary_button {
   color:#FFFFFF;
 }
-.shape1 {
-  color:#333333;
-}
 .heading_11 {
   font-family:'微软雅黑', sans-serif;
   font-weight:bold;
@@ -186,7 +183,7 @@
   text-align:left;
 }
 ._形状2 {
-  font-family:'微软雅黑 Bold', '微软雅黑', '微软雅黑', sans-serif;
+  font-family:'微软雅黑 Bold', '微软雅黑 Regular', '微软雅黑', sans-serif;
   font-weight:700;
   font-style:normal;
   font-size:20px;
@@ -202,7 +199,7 @@
 .flow_shape {
 }
 .refs-webm-wechat {
-  font-family:'PingFangSC-Regular', 'PingFang SC', sans-serif;
+  font-family:'PingFang SC ', 'PingFang SC', sans-serif;
   font-weight:400;
   font-style:normal;
 }
@@ -217,7 +214,7 @@
   text-align:left;
 }
 .basicbutton-embossed {
-  font-family:'Roboto Medium', 'Roboto', 'Roboto', sans-serif;
+  font-family:'Roboto Medium', 'Roboto Regular', 'Roboto', sans-serif;
   font-weight:500;
   font-style:normal;
   font-size:16px;
@@ -235,7 +232,7 @@
   text-align:left;
 }
 ._自定义_一级菜单 {
-  font-family:"Arial", sans-serif;
+  font-family:'Arial Normal', 'Arial', sans-serif;
   font-weight:400;
   font-style:normal;
   font-size:18px;
@@ -246,7 +243,7 @@
   color:#333333;
 }
 .primary-button {
-  font-family:'Roboto Medium', 'Roboto', 'Roboto', sans-serif;
+  font-family:'Roboto Medium', 'Roboto Regular', 'Roboto', sans-serif;
   font-weight:500;
   font-style:normal;
   font-size:16px;
@@ -297,7 +294,7 @@
   color:#333E50;
 }
 ._自定义_标题栏1 {
-  font-family:"Arial", sans-serif;
+  font-family:'Arial Normal', 'Arial', sans-serif;
   font-weight:normal;
   font-style:normal;
   font-size:18px;
@@ -348,7 +345,7 @@
 ._表格 {
 }
 .basicbutton {
-  font-family:'Roboto Medium', 'Roboto', 'Roboto', sans-serif;
+  font-family:'Roboto Medium', 'Roboto Regular', 'Roboto', sans-serif;
   font-weight:500;
   font-style:normal;
   font-size:16px;
@@ -358,7 +355,7 @@
 ._形状4 {
 }
 .basicbutton-outline {
-  font-family:'Roboto Medium', 'Roboto', 'Roboto', sans-serif;
+  font-family:'Roboto Medium', 'Roboto Regular', 'Roboto', sans-serif;
   font-weight:500;
   font-style:normal;
   font-size:16px;
@@ -379,7 +376,7 @@
 ._默认样式1 {
 }
 .title3 {
-  font-family:"Arial", sans-serif;
+  font-family:'Arial Normal', 'Arial', sans-serif;
   font-weight:400;
   font-style:normal;
   font-size:18px;
@@ -387,7 +384,7 @@
   text-align:left;
 }
 .basictextlabel {
-  font-family:'Roboto Medium', 'Roboto', 'Roboto', sans-serif;
+  font-family:'Roboto Medium', 'Roboto Regular', 'Roboto', sans-serif;
   font-weight:500;
   font-style:normal;
   font-size:13px;
@@ -406,7 +403,7 @@
   color:#169BD5;
 }
 .grouped-buttons {
-  font-family:'Roboto Medium', 'Roboto', 'Roboto', sans-serif;
+  font-family:'Roboto Medium', 'Roboto Regular', 'Roboto', sans-serif;
   font-weight:500;
   font-style:normal;
   font-size:16px;
@@ -418,7 +415,7 @@
   text-align:left;
 }
 .basicbutton1 {
-  font-family:'Roboto Medium', 'Roboto', 'Roboto', sans-serif;
+  font-family:'Roboto Medium', 'Roboto Regular', 'Roboto', sans-serif;
   font-weight:500;
   font-style:normal;
   font-size:16px;
@@ -453,12 +450,12 @@
 ._图片1 {
 }
 .font_awesome_5_free_solid {
-  font-family:"Font Awesome 5 Free", sans-serif;
+  font-family:'Font Awesome 5 Free ', 'Font Awesome 5 Free', sans-serif;
   font-weight:900;
   font-style:normal;
 }
 ._形状5 {
-  font-family:'微软雅黑 Bold', '微软雅黑', '微软雅黑', sans-serif;
+  font-family:'微软雅黑 Bold', '微软雅黑 Regular', '微软雅黑', sans-serif;
   font-weight:700;
   font-style:normal;
   font-size:16px;
@@ -554,7 +551,7 @@
   text-align:left;
 }
 ._形状6 {
-  font-family:'微软雅黑 Bold', '微软雅黑', '微软雅黑', sans-serif;
+  font-family:'微软雅黑 Bold', '微软雅黑 Regular', '微软雅黑', sans-serif;
   font-weight:700;
   font-style:normal;
   color:#FF0066;

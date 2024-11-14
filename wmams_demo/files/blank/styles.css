@@ -2,7 +2,7 @@
   margin:0px;
   background-image:none;
   position:relative;
-  left:-0px;
+  left:0px;
   width:1590px;
   margin-left:auto;
   margin-right:auto;
@@ -35,7 +35,7 @@
   -moz-box-shadow:none;
   -webkit-box-shadow:none;
   box-shadow:none;
-  font-family:'TimesNewRomanPS-BoldMT', 'Times New Roman Bold', 'Times New Roman', sans-serif;
+  font-family:'Times New Roman Negreta', 'Times New Roman Normal', 'Times New Roman', sans-serif;
   font-weight:700;
   font-style:normal;
   font-size:60px;
@@ -50,7 +50,7 @@
   width:479px;
   height:119px;
   display:flex;
-  font-family:'TimesNewRomanPS-BoldMT', 'Times New Roman Bold', 'Times New Roman', sans-serif;
+  font-family:'Times New Roman Negreta', 'Times New Roman Normal', 'Times New Roman', sans-serif;
   font-weight:700;
   font-style:normal;
   font-size:60px;
@@ -91,9 +91,9 @@
   background-image:none;
   border:none;
   border-radius:0px;
-  -moz-box-shadow:0px 3px 5px rgba(0, 0, 0, 0.047058823529411764);
-  -webkit-box-shadow:0px 3px 5px rgba(0, 0, 0, 0.047058823529411764);
-  box-shadow:0px 3px 5px rgba(0, 0, 0, 0.047058823529411764);
+  -moz-box-shadow:0px 3px 5px rgba(0, 0, 0, 0.0470588235294118);
+  -webkit-box-shadow:0px 3px 5px rgba(0, 0, 0, 0.0470588235294118);
+  box-shadow:0px 3px 5px rgba(0, 0, 0, 0.0470588235294118);
 }
 #u304_state0_content {
   border-width:0px;

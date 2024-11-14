@@ -280,12 +280,11 @@
 
         for (var i = 0; i < elementIds.length; i++) {
             var elementId = elementIds[i];
-            // elementId could be "undefined" so escape this
             if ((elementId || elementId === 0) && elementId !== "undefined") {
                 var parent = getParent(elementId);
-                if(deep) {
+                if (deep) {
                     var parents = [];
-                    while(parent) {
+                    while (parent) {
                         parents[parents.length] = parent;
                         // If id is not a valid object, you are either repeater item or dynamic panel state
                         //if(!$obj(parent)) parent = $ax.visibility.getWidgetFromContainer($jobj(parent).parent().attr('id'));

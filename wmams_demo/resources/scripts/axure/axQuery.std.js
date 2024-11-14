@@ -80,15 +80,7 @@ $axure.internal(function($ax) {
     $ax.public.fn.IsSelectionButton = function(type) {
         return type == $ax.constants.RADIO_BUTTON_TYPE || type == $ax.constants.CHECK_BOX_TYPE;
     };
-
-    $ax.public.fn.SupportsErrorStyle = function(widgetType) {
-        return $ax.public.fn.IsImageBox(widgetType) || $ax.public.fn.IsVector(widgetType)
-            || $ax.public.fn.IsDynamicPanel(widgetType) || $ax.public.fn.IsLayer(widgetType)
-            || $ax.public.fn.IsTextArea(widgetType) || $ax.public.fn.IsTextBox(widgetType)
-            || $ax.public.fn.IsListBox(widgetType) || $ax.public.fn.IsComboBox(widgetType)
-            || $ax.public.fn.IsCheckBox(widgetType) || $ax.public.fn.IsRadioButton(widgetType)
-    }
-
+    
     $ax.public.fn.SupportsRichText = function() {
         var obj = $obj(this.getElementIds()[0]);
         // Catch root tree nodes as they are not supported.
@@ -164,40 +156,28 @@ $axure.internal(function($ax) {
         return this;
     };
 
-    $ax.public.fn.SetPanelState = function (stateNumber, options, eventInfo, showWhenSet) {
+    $ax.public.fn.SetPanelState = function(stateNumber, options, showWhenSet) {
 
         var animateInInfo = _getAnimateInfo(options && options.animateIn, 500);
         var animateOutInfo = _getAnimateInfo(options && options.animateOut, 500);
 
         var elementIds = this.getElementIds();
 
-        for (var index = 0; index < elementIds.length; index++) {
+        for(var index = 0; index < elementIds.length; index++) {
             var elementId = elementIds[index];
             if ($ax.public.fn.IsDynamicPanel($ax.getTypeFromElementId(elementId))) {
-                var currentStateName = $ax.visibility.GetPanelState(elementId);
-                var newStateName = $ax.visibility.GetPanelStateId(elementId, Number(stateNumber) - 1);
+                var stateName = $ax.visibility.GetPanelStateId(elementId, Number(stateNumber) - 1);
                 var wasVisible = $ax.visibility.IsIdVisible(elementId);
-
-                $ax.dynamicPanelManager.setPanelSizeChange(elementId, $ax.dynamicPanelManager.getPanelStateSizeDelta(currentStateName, newStateName));
-
-
-                var delta = NaN;
-                if (options.compress && options.compressDistanceType == "custom") {
-                    delta = Number($ax.expr.evaluateExpr(options.compressValue, eventInfo));
-                }
-
                 // If compressing because you are fit to content and the change of state may change size, must be before the change.
                 if(options.compress && $ax.dynamicPanelManager.isIdFitToContent(elementId) && wasVisible) {
-                    $ax.dynamicPanelManager.compressDelta(elementId, currentStateName, newStateName, options.vertical, options.compressEasing, options.compressDuration, delta);
+                    $ax.dynamicPanelManager.compressDelta(elementId, $ax.visibility.GetPanelState(elementId), stateName, options.vertical, options.compressEasing, options.compressDuration);
                 }
-                $ax.visibility.SetPanelState(elementId, newStateName, animateOutInfo.easingType, animateOutInfo.direction, animateOutInfo.duration,
+                $ax.visibility.SetPanelState(elementId, stateName, animateOutInfo.easingType, animateOutInfo.direction, animateOutInfo.duration,
                     animateInInfo.easingType, animateInInfo.direction, animateInInfo.duration, showWhenSet);
                 // If compressing because of a show, must be after state is set.
                 if(options.compress && !wasVisible && showWhenSet) {
-                    $ax.dynamicPanelManager.compressToggle(elementId, options.vertical, true, options.compressEasing, options.compressDuration, delta);
+                    $ax.dynamicPanelManager.compressToggle(elementId, options.vertical, true, options.compressEasing, options.compressDuration);
                 }
-
-                $ax.dynamicPanelManager.clearPanelSizeChanges();
             }
         }
 
@@ -229,11 +209,11 @@ $axure.internal(function($ax) {
                         opacity: options.lightbox.a / 255
                     });
 
-                    var parents = $ax('#' + elementId).getParents(true, '*')[0];
+                    var parents = $ax('#' + elementId).getParents(true, ['dynamicPanel'])[0];
                     var fixedParentPanelId = undefined;
                     for(var j = 0; j < parents.length; j++) {
                         var parentId = parents[j];
-                        if ($ax.visibility.IsIdVisible(parentId) && ($jobj(parentId).css('z-index') != 'auto' || $ax.features.supports.mobile)) {
+                        if($jobj(parentId).css('z-index') != 'auto' || $ax.features.supports.mobile) {
                             fixedParentPanelId = parents[j];
                             break;
                         }
@@ -368,16 +348,12 @@ $axure.internal(function($ax) {
         return this;
     };
 
-    var _shouldCompress = function (showType) {
-        return showType == 'compressVertical' || showType == 'compressRight'
-    }
-
     var _setVisibility = function (elementId, value, options, useHide) {
         var animateInfo = _getAnimateInfo(options, 0, useHide);
 
         var wasShown = $ax.visibility.IsIdVisible(elementId);
-        var compress = options && _shouldCompress(options.showType) && wasShown != value;
-        if (compress) $ax.dynamicPanelManager.compressToggle(elementId, options.vertical, value, options.compressEasing, options.compressDuration, options.compressDelta ?? NaN);
+        var compress = options && options.showType == 'compress' && wasShown != value;
+        if (compress) $ax.dynamicPanelManager.compressToggle(elementId, options.vertical, value, options.compressEasing, options.compressDuration);
 
         var onComplete = function () {
             $ax.dynamicPanelManager.fitParentPanel(elementId);
@@ -396,7 +372,7 @@ $axure.internal(function($ax) {
     };
 
     $ax.public.fn.setOpacity = function(opacity, easing, duration) {
-        if(!easing || ! duration) {
+        if(!easing || !duration) {
             easing = 'none';
             duration = 0;
         }
@@ -411,10 +387,10 @@ $axure.internal(function($ax) {
                     setOpacity(obj.objs.flatMap(o => o.scriptIds));
                     $ax.action.removeAnimationFromQueue(elementId, $ax.action.queueTypes.fade);
                 } else if($ax.public.fn.SupportSetOpacity(obj.type)) {
-                    var onComplete = function () {
+                    var onComplete = function() {
                         $ax.action.fireAnimationFromQueue(elementId, $ax.action.queueTypes.fade);
                     };
-                    
+
                     if(duration == 0 || easing == 'none') {
                         query.css('opacity', opacity);
                         onComplete();
@@ -425,8 +401,8 @@ $axure.internal(function($ax) {
 
         var elementIds = this.getElementIds();
         setOpacity(elementIds);
-        
     }
+
     //move one widget.  I didn't combine moveto and moveby, since this is in .public, and separate them maybe more clear for the user
     var _move = function (elementId, x, y, options, moveTo) {
         if(!options.easing) options.easing = 'none';
@@ -459,7 +435,6 @@ $axure.internal(function($ax) {
         var cursorOffset = { x: 0, y: 0 };
 
         var element = $ax('#' + elementId);
-        // element.getParents returns undefined if it has no parents
         var dynamicPanelParents = element.getParents(true, 'dynamicPanel')[0] || [];
         // repeater can be only one
         var repeaterParents = element.getParents(false, 'repeater');
@@ -484,6 +459,7 @@ $axure.internal(function($ax) {
         }
         return cursorOffset;
     }
+
 
     $ax.public.fn.moveTo = function (x, y, options) {
         var elementIds = this.getElementIds();
@@ -563,8 +539,6 @@ $axure.internal(function($ax) {
 
         for(var index = 0; index < elementIds.length; index++) {
             var elementId = elementIds[index];
-            var oldBoundingRect = $ax('#' + elementId).offsetBoundingRect(true);
-            $ax.visibility.setResizingRect(elementId, oldBoundingRect);
 
             var obj = $obj(elementId);
             if(!$ax.public.fn.IsResizable(obj.type)) {
@@ -600,7 +574,6 @@ $axure.internal(function($ax) {
 
                     completeAndFire(moves, elementId);
                     $ax.event.raiseSyntheticEvent(elementId, 'onResize');
-                    $ax.visibility.clearResizingRects();
                 };
 
             } else {
@@ -640,7 +613,6 @@ $axure.internal(function($ax) {
 
                     $ax.annotation.adjustIconLocation(elementId);
                     $ax.event.raiseSyntheticEvent(elementId, 'onResize');
-                    $ax.visibility.clearResizingRects();
                 };
             }
 
@@ -987,7 +959,7 @@ $axure.internal(function($ax) {
 
         var viewportLocation;
         if ($scrollable.is('body')) viewportLocation = $ax('#' + id).viewportLocation();
-        else viewportLocation = $ax('#' + id).pageBoundingRect(true, $scrollable.attr('id'), true).location;
+        else viewportLocation = $ax('#' + id).pageBoundingRect(true, $scrollable.attr('id')).location;
 
         var targetLeft = viewportLocation.left;
         var targetTop = viewportLocation.top;
@@ -1053,7 +1025,7 @@ $axure.internal(function($ax) {
             var widgetType = $ax.getTypeFromElementId(firstId);
             if ($ax.public.fn.IsImageBox(widgetType) || $ax.public.fn.IsVector(widgetType)
                 || $ax.public.fn.IsLayer(widgetType)) return !$ax.style.IsWidgetDisabled(firstId);
-            else return this.jQuery().children(':disabled').length <= 0 && this.jQuery().children('.disabled').length <= 0;
+            else return this.jQuery().children(':disabled').length <= 0;
         } else {
             var elementIds = this.getElementIds();
 
@@ -1102,42 +1074,6 @@ $axure.internal(function($ax) {
         for(var index = 0; index < ids.length; index++) $ax.visibility.SetIdVisible(ids[index], arguments[0]);
         return this;
     };
-
-    $ax.public.fn.error = function () {
-        if(arguments[0] == undefined) {
-            var firstId = this.getElementIds()[0];
-            if(!firstId) return undefined;
-            //check for error
-            var widgetType = $ax.getTypeFromElementId(firstId);
-            if($ax.public.fn.SupportsErrorStyle(widgetType)) {
-                return $ax.style.IsWidgetError(firstId);
-            }
-        } else {
-            var elementIds = this.getElementIds();
-
-            for(var index = 0; index < elementIds.length; index++) {
-                var elementId = elementIds[index];
-                var widgetType = $ax.getTypeFromElementId(elementId);
-
-                var error = arguments[0];
-                if($ax.public.fn.IsImageBox(widgetType) || $ax.public.fn.IsVector(widgetType)
-                    || $ax.public.fn.IsTextBox(widgetType) || $ax.public.fn.IsTextArea(widgetType)
-                    || $ax.public.fn.IsComboBox(widgetType) || $ax.public.fn.IsListBox(widgetType)
-                    || $ax.public.fn.IsCheckBox(widgetType) || $ax.public.fn.IsRadioButton(widgetType)
-                ) $ax.style.SetWidgetError(elementId, error);
-
-                if($ax.public.fn.IsDynamicPanel(widgetType) || $ax.public.fn.IsLayer(widgetType)) {
-                    $ax.style.SetWidgetError(elementId, error);
-                    var children = this.getChildren(false, true)[index].children;
-                    for(var i = 0; i < children.length; i++) {
-                        $axure('#' + children[i]).error(error);
-                    }
-                }
-            }
-            return this;
-        }
-    }
-
 
     $ax.public.fn.selected = function() {
         if(arguments[0] == undefined) {
@@ -1257,7 +1193,7 @@ $axure.internal(function($ax) {
         }
     };
 
-    var _populateBoundingRect = function(boundingRect) {
+    var _populateBoundingRect = function (boundingRect) {
         boundingRect.right = boundingRect.left + boundingRect.width;
         boundingRect.bottom = boundingRect.top + boundingRect.height;
 
@@ -1363,7 +1299,7 @@ $axure.internal(function($ax) {
 
     var _boundingRectForIds = function(childIds) {
         // Default size
-        var childrenBoundingRect = { left: childIds.length > 0 ? 99999 : 0, top: childIds.length > 0 ? 99999 : 0, right: 0, bottom: 0 };
+        var childrenBoundingRect = { left: childIds.length > 0 ? 9999999 : 0, top: childIds.length > 0 ? 9999999 : 0, right: 0, bottom: 0 };
         for (var i = 0; i < childIds.length; i++) {
             var childId = childIds[i];
             var childObj = $obj(childId);
@@ -1451,7 +1387,7 @@ $axure.internal(function($ax) {
     $ax.public.fn.offsetBoundingRect = function (ignoreRotation, ignoreOuterShadow) {
         var elementId = this.getElementIds()[0];
         if (!elementId) return undefined;
-        
+
         //element is null if RDO
         //data- values are for layers (legacy compound) 
         var element = document.getElementById(elementId);
@@ -1462,7 +1398,7 @@ $axure.internal(function($ax) {
         var style;
         var movedLoc = $ax.visibility.getMovedLocation(elementId);
         var resizedSize = $ax.visibility.getResizedSize(elementId);
-        
+
         if (movedLoc) {
             position = movedLoc;
         } else if(element && element.getAttribute('data-left')) {
@@ -1542,7 +1478,7 @@ $axure.internal(function($ax) {
             var jObj = $(element);
             size = { width: jObj.outerWidth(), height: jObj.outerHeight() };
         }
-        
+
         var fixed = _fixedLocation(elementId, size);
         if(fixed.valid) {
             position.left = fixed.left;

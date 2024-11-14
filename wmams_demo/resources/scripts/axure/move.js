@@ -107,16 +107,6 @@
         }
     };
 
-    var _trapScrollLoc = function(obj) {
-        var objLoc = {
-            x: obj.scrollLeft,
-            y: obj.scrollTop
-        }
-        return function () {
-            obj.scroll(objLoc.x, objLoc.y);
-        };
-    }
-
     var _moveElement = function (id, options, animationCompleteCallback, shouldFire,  jobj, moveInfo){
         var cssStyles = {};
 
@@ -131,26 +121,11 @@
 
         var query = $addAll(jobj, id);
         var completeCount = query.length;
-        // use this hack to return the state scroll position to the original location because smthg unexpectedly sets it to(0,0). RP-2809
-        var parentPanelStates = $ax('#' + id).getParents(true, 'state');
-        var scrollPrevented = false;
-        var completeAnimation = function () {
-            // scroll hack, see above. RP-2809
-            var preventNextStateScroll = function () {
-                if(scrollPrevented || !parentPanelStates || !parentPanelStates.length) return;
-                var state = document.getElementById(parentPanelStates[0]);
-                if(!state) return;
-                var trapScroll = _trapScrollLoc(state);
-                var preventFunc = () => trapScroll();
-                state.addEventListener("scroll", preventFunc, { once: true });
-                scrollPrevented = true;
-            }
-
+        var completeAnimation = function() {
             completeCount--;
             if(completeCount == 0 && rootLayer) $ax.visibility.popContainer(rootLayer, false);
             if(animationCompleteCallback) animationCompleteCallback();
             if(shouldFire) $ax.action.fireAnimationFromQueue(id, $ax.action.queueTypes.move);
-            preventNextStateScroll();
         };
         if (options.easing === 'none') {
             //if not having this requestAnimationFrame causes performance issues,
